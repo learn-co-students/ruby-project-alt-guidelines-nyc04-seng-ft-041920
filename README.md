@@ -35,25 +35,25 @@ Jon:
         1. \<String :: name>
 
 2. Hotfix: Relationships
+
     I added the following relationships to the current tables
 
-        * Order: 
-            1. belongs to \<recipes> relationship
-            2. belongs to \<ingredients> relationship
-            3. belongs to \<units> relationship
-            4. has one \<user> through \<recipes> relationship.
+    * Order:
+        1. belongs to \<recipes> relationship
+        2. belongs to \<ingredients> relationship
+        3. belongs to \<units> relationship
+        4. has one \<user> through \<recipes> relationship.
 
-        * User:
-            1. Has many \<recipes>
-            2. Has many \<orders> through \<recipes> relationship
-                    
-        * Recipe:
-            1. has many \<orders> relationship
-            2. belongs to \<users> relationship
-        
-        * Ingredient:
-            1. has many \<orders> relationship
+    * User:
+        1. Has many \<recipes>
+        2. Has many \<orders> through \<recipes> relationship
 
-        * Units:
-            1. has many \<orders> relationship
-            
+    * Recipe:
+        1. has many \<orders> relationship
+        2. belongs to \<users> relationship
+
+    * Ingredient:
+        1. has many \<orders> relationship
+
+    * Units:
+        1. has many \<orders> relationship
