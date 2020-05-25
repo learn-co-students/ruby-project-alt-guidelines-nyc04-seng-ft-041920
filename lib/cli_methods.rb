@@ -1,5 +1,4 @@
 require "tty-prompt"
-
 prompt = TTY::Prompt.new
 
 def greeting
@@ -10,8 +9,6 @@ def greeting
   puts "Before giving you our secret smoothie recipes, we need you to login."
   log_in()
 end
-
-# greeting()
 
 def clear
   system "clear"
@@ -43,17 +40,17 @@ def log_in
   log_in = prompt.select("Choose an option?", %w(Login Register))
   #   binding.pry
   if log_in == "Login"
-    puts "loging in ...."
+    find_user()
   elsif log_in == "Register"
     puts "Let's get you settled with an account"
     register()
   end
 end
 
-# log_in()
-
-# email = prompt.ask('What is your email?') { |q| q.validate :email }
-
-# prompt.ask("Do you have an account with us?", default: ENV["USER"])
-
-# prompt.mask("What is your secret?")
+def find_user()
+  prompt = TTY::Prompt.new
+  puts "Welcome back!"
+  username = prompt.ask("Please enter your username?")
+  user = User.all.find_by(username: username)
+  puts "Welcome back to Smoodie, #{user.name}"
+end
