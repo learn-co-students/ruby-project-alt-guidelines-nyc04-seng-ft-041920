@@ -1,3 +1,10 @@
 require_relative '../config/environment'
-binding.pry
-puts "hello world"
+cli = CommandLineInterface.new
+
+# cli.greet
+# cli.run
+
+
+
+ binding.pry
+# puts "hello world"
