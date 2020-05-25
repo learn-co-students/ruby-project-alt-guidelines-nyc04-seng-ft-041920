@@ -1,4 +1,2 @@
-require_relative '../config/environment'
-
-puts "hello world"
-      
+# require_relative '../config/environment'
+require_relative '../lib/cli_methods/cli_user'
