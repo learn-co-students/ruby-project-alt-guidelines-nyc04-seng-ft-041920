@@ -14,7 +14,7 @@ class CommandLineInterface
     end
 
     def add_plant
-        puts "Enter a plant name you want to get started:"
+        puts "Enter a plant species you want to add: (ex: Lily, Mint, Spider plant etc.)"
         plant_name = gets.chomp.downcase
         check_plant(plant_name)
         # What could we put here to allow a user to type a response?
