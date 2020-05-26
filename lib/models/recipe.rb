@@ -1,4 +1,6 @@
 class Recipe < ActiveRecord::Base
-  belongs_to :moods
+  has_many :moods
   has_many :users, through: :moods
 end
+# belongs to association , the belongs to part 
+# has a foreign key 

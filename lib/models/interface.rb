@@ -5,7 +5,7 @@ class Interface
     @prompt = TTY::Prompt.new
   end
 
-  def greeting
+  def welcome
     puts "Welcome to Smoodie!"
     sleep 2
     puts "........."
