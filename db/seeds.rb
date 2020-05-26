@@ -4,13 +4,6 @@ Recipe.destroy_all
 Favorite.destroy_all
 require "faker"
 
-# username = Faker::Name.name      #=> "Christophe Bartell"
-# binding.pry
-# cc = User.create(username: "Cristian")
-# fr = User.create(username: "Franchell")
-
-# username = #=> "Christophe Bartell"
-
 def seed_names
   50.times do
     name = Faker::Name.unique.first_name
