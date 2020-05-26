@@ -18,28 +18,25 @@ class User < ActiveRecord::Base
       else
         password = prompt.mask("Enter desired password", echo: false)
         User.create(username: username, name: full_name)
-        sleep 2
         puts "your account has been created! Now, please log in!"
       end
     else
       custom_username == "no" || custom_username == "n"
       User.create(username: username, name: full_name)
-      sleep2
       puts "Your account has been created"
     end
   end
-end
 
-#
-def self.login
-  prompt = TTY::Prompt.new
-  puts "Welcome back!"
-  username = prompt.ask("Please enter your username?")
-  found_user = User.all.find_by(username: username)
-  if found_user
-    return found_user
-    puts "Welcome back to Smoodie, #{user.name}"
-  else
-    puts "Sorry! that name does not exist in our database"
+  def self.login
+    prompt = TTY::Prompt.new
+    puts "Welcome back!"
+    username = prompt.ask("Please enter your username?")
+    found_user = User.all.find_by(username: username)
+    if found_user
+      puts "Welcome back to Smoodie, #{found_user.name}"
+      return found_user
+    elsif !found_user
+      puts "Sorry! that name does not exist in our database"
+    end
   end
 end

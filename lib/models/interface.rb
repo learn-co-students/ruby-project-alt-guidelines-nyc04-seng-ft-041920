@@ -19,12 +19,12 @@ class Interface
     if log_in_answer == "Login"
       User.login
     elsif log_in_answer == "Register"
-      User.Register()
+      User.Register
     end
   end
 
   def main_menu
-    puts "Hello, welcome to the app,! #{username}"
+    puts "Hello, welcome to the app,! #{user.username}"
   end
 
   #
@@ -32,3 +32,23 @@ class Interface
   # system "clear"
   # end
 end
+
+# main menu method
+# greet user
+# prompt for mood
+# get list of moods from moods and display
+#
+#
+# figuring out the seeing
+#
+# loading method
+# puts some loading dots as placerholder
+# ...
+#
+# association method
+# it should retrieve the recipe that belongs to that mood
+# and siplay all recipe information
+
+# we should have the logout option
+
+# finish the seed assoations
