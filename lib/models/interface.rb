@@ -1,17 +1,38 @@
+###########################
+# Screem clearing module  #
+###########################
+
+module Screen
+    def clear
+        print "\e[2J\e[f"
+    end
+
+    def erase
+        system 'clear'
+    end
+end
+
+###########################
+# Interface class for CLI #
+###########################
 class Interface
+    include Screen
+
     attr_accessor :prompt
+
+    # Add TTY-prompt
     def initialize
         @prompt = TTY::Prompt.new
     end
     
     def greet
-        # puts 'Thinking of florishing your house with some green but not sure to keep it alive?'
         puts 'Welcome to Green Fairy 🧚'
         puts 'The best scheduler for watering your plants!'
         puts 'Let\'s get you started'
         puts 'Tell us your username 📛'
     end
-    
+
+    # Start the CLI APP
     def run
         greet
         username_input = gets.chomp.downcase
@@ -20,35 +41,33 @@ class Interface
         main_menu(user)
     end
 
+    # Main Menu -> My Plants/ Add plant/ Delete Account/ Quit
     def main_menu(user)
         user = user
-        menu = ["My plants","ADD NEW PLANT","Delete My Account","Exit"]
+        menu = ["My plants","ADD NEW PLANT","Delete My Account","Quit"]
         menu_selection = @prompt.select("What would you like to do?",menu)
             
             case menu_selection
             when "My plants"
                 my_plant(user)
             when "ADD NEW PLANT"
-                #find plant
-                #add plant to myplant
                 add_plant(user)
             when "Delete My Account"
                 answer = @prompt.yes?("Are you sure?")
-                goodbye
-                user.delete
-            when "Exit"
                 self.goodbye
-                p "something good bye"
-                
+                user.destroy
+            when "Quit"
+                self.goodbye                
             end
-            # main_menu(user)
     end
+
+    #Sub-Menu: My Plants (displays all the plant user owns, leads to update them)
     def my_plant(user)
-        #  binding.pry
-        
-         main_my_plants_table(user)
+        self.clear
+        show_my_plants_table(user)
 
         if user.all_plants.blank?
+            
             puts "Looks like you don't have any plants"
             answer = @prompt.yes?("Do you want to add plants?")
             case answer
@@ -63,7 +82,7 @@ class Interface
             case answer
             when true
                 nicknames = user.my_plants.nicknames
-                nickname = @prompt.select("Which plant do you water?", nicknames)
+                nickname = @prompt.select("Which plant did you water?", nicknames)
                 selected_plant = user.find_plant_nickname(nickname)
                 update_plant(selected_plant,user)
             when false
@@ -73,25 +92,18 @@ class Interface
     end
 
     def update_plant(selected_plant, user)
-        menu = ["update water status","change watering cycle","back"]
+        menu = ["update watering status","change watering cycle","back"]
         menu_selection = @prompt.select("options",menu)
         case menu_selection
-        when "update water status"
-            date =  @prompt.ask("when did you water #{selected_plant.nickname}? (in mm/dd)", convert: :date)
+        when "update watering status"
+            date =  @prompt.ask("when did you water #{selected_plant.nickname}? Today is #{Date.today}(in mm/dd)", convert: :date)
             selected_plant.update_waterdate_status(date)
-            # selected_plant.update(watering_date: date)
-            # selected_plant.update(watered: true)
-            # puts selected_plant
-            # binding.pry
-            #==============================>show table
+           
             main_menu(user)
         when "change watering cycle"
-            #plant.water_cycle = new_cycle
             days =  @prompt.ask("Change #{selected_plant.nickname}'s watering cycle to every 'x' days?", convert: :int)
             selected_plant.change_watercycle(days)
-            # selected_plant.update(water_cycle: days)
-            # puts selected_plant
-            # binding.pry
+            
             #==============================>show table
             main_menu(user)
         when "back"
@@ -111,6 +123,53 @@ class Interface
         main_menu(user)
     end
     
+    
+
+    def updated_my_plants_table(user)
+        rows = user.all_plants.map.with_index{|plant, index| my_plant_list(plant,index)}
+        headings = default_table_headings
+        table = create_display_table("My Plants", headings, rows)
+        table.style = default_table_style
+        table.align_column(0, :left)
+        puts table
+    end
+
+    ###########################
+    # Table Related functions #
+    ###########################
+
+    # Default table setup and settings
+    def create_display_table(title, headings, rows)
+        Terminal::Table.new :title=> title, :headings => headings, :rows => rows
+    end
+    # Table Style 
+    def default_table_style
+        {:alignment => :center, :padding_left => 2, :border_x => "=", :border_i => "+"}
+    end
+
+    # Set table heading
+    def default_table_headings
+        MyPlant.heading
+    end
+
+    # Get data from curr_user's MyPlant
+    def my_plant_list(my_plant, index)
+        my_plant.show_each_plant_spec(index)
+    end
+
+    # Render Table
+    def show_my_plants_table(user)
+        rows = user.all_plants.map.with_index{|plant, index| my_plant_list(plant,index)}
+        headings = default_table_headings
+        table = create_display_table("My Plants", headings, rows)
+        table.style = default_table_style
+        table.align_column(0, :left)
+        puts table
+    end
+
+    ##################################
+    ##loading and good bye function ##
+    ##################################
     def loading(length, sym, timing)
         length.times do |a|
           print sym
@@ -130,33 +189,6 @@ class Interface
         end
         puts "bye bye"
     end
-
-    def main_my_plants_table(user)
-        # binding.pry
-        puts user.all_plants
-        rows = user.all_plants.map.with_index{|plant, index| my_plant_list(plant,index)}
-        headings = default_table_headings
-        table = create_display_table("My Plants", headings, rows)
-        table.style = default_table_style
-        table.align_column(0, :left)
-        puts table
-    end
-
-    # Default table setup and settings
-    def create_display_table(title, headings, rows)
-        Terminal::Table.new :title=> title, :headings => headings, :rows => rows
-    end
-
-    def default_table_style
-        {:alignment => :center, :padding_left => 2, :border_x => "=", :border_i => "x"}
-    end
-
-    def default_table_headings
-        MyPlant.heading
-    end
-
-    def my_plant_list(my_plant, index)
-        my_plant.show_each_plant_spec(index)
-    end
-
+    
+    
 end

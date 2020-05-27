@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-    has_many :my_plants
+    has_many :my_plants, dependent: :delete_all
     has_many :plant_lists, through: :my_plants
 
     # def initialize(username)
