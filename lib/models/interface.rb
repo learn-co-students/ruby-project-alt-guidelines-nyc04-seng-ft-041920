@@ -44,18 +44,31 @@ class Interface
             # main_menu(user)
     end
     def my_plant(user)
-        # binding.pry
-        main_my_plants_table(user)
+        #  binding.pry
+        
+         main_my_plants_table(user)
+
         if user.all_plants.blank?
             puts "Looks like you don't have any plants"
             answer = @prompt.yes?("Do you want to add plants?")
-            add_plant(user)
+            case answer
+            when true
+                add_plant(user)
+            when false
+                main_menu(user)
+            end
         else
-            plant_num = user.num_of_plants
-            nicknames = user.my_plants.nicknames
-            nickname = @prompt.select("Which plant do you want to water?", nicknames)
-            selected_plant = user.find_plant_nickname(nickname)
-            update_plant(selected_plant,user)
+            answer = @prompt.yes?("Have you watered any of your plants?")
+            # answer = @prompt.yes?("Do you want to add plants?")
+            case answer
+            when true
+                nicknames = user.my_plants.nicknames
+                nickname = @prompt.select("Which plant do you water?", nicknames)
+                selected_plant = user.find_plant_nickname(nickname)
+                update_plant(selected_plant,user)
+            when false
+                main_menu(user)
+            end
         end
     end
 
@@ -119,7 +132,9 @@ class Interface
     end
 
     def main_my_plants_table(user)
-        rows = user.all_plants.map.with_index{|plant, index| my_plant_list(plant,index+1)}
+        # binding.pry
+        puts user.all_plants
+        rows = user.all_plants.map.with_index{|plant, index| my_plant_list(plant,index)}
         headings = default_table_headings
         table = create_display_table("My Plants", headings, rows)
         table.style = default_table_style
