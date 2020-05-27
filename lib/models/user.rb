@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
-  belongs_to :mood_recipe
-  has_many :mood_recipe
+  has_many :favorites
+  has_many :recipes, through: :favorites
 end
 
 #   def self.register

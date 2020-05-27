@@ -2,10 +2,12 @@ require_relative "../config/environment"
 interface = Interface.new()
 interface.welcome
 
-user_instance = interface.chooose_login_or_register
+# user_instance = interface.chooose_login_or_register
 
-binding.pry 
-interface.user = user_instance
+# interface.user = user_instance
+# binding.pry
+
+interface.display
 
 interface.main_menu
 
