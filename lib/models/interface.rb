@@ -110,13 +110,19 @@ class Interface
     def login
         email = prompt.ask("Please provide your email address?")
         match = User.find_by(emailaddress: email)
+        
         if match
             password = prompt.ask("What is your password?")
             @user = match
-             match.password == password ? self.delivery : self.login_failed
+             match.password == password ? self.delivery : self.incorrect_password
         else
             self.login_failed
         end
+    end
+
+    def incorrect_password
+        puts "Oops! Looks like that password is incorrect. Try again."
+        self.login
     end
 
 
@@ -137,7 +143,7 @@ class Interface
 
 
     def login_failed
-        answer = prompt.select("Email does not exist. Would you like to create a new one?", [
+        answer = prompt.select("Sorry! We couldn't find a Muncheez account  with that email. Would you like to create a new one?", [
             "Yes",
             "No"
         ])
@@ -151,20 +157,107 @@ class Interface
     #     user_input == "yes" ? self.create_account : self.login
     # end
 
+
     def delivery
-        puts "What would you like to order?:"
-        order = gets.chomp
-        @order = Order.create(order: order, user_id: @user.id)
-        binding.pry
+        answer = prompt.select("What are you craving?", [
+            "Breakfast",
+            "Burger",
+            "Pizza",
+            "Sandwich",
+            "Salad",
+            "Dessert"
+        ])
+        case answer
+        when "Breakfast"
+          breakfast
+        when "Burger"
+          burger
+        when "Pizza"
+          pizza
+        when "Sandwich"
+          sandwich
+        when "Salad"
+            salad
+        when "Dessert"
+            dessert
+        end
+
+    end
+
+    def breakfast
+        answer = prompt.select("What would you like to order?", [
+            "Pancakes",
+            "French Toast",
+            "Omelette"
+        ])
+        @order = Order.create(order: answer, user_id: @user.id)
         self.view_cart
     end
+
+    def burger
+        answer = prompt.select("What would you like to order?", [
+            "Classic Burger",
+            "Cheese Burger",
+            "Bacon Cheese Burger"
+        ])
+        @order = Order.create(order: answer, user_id: @user.id)
+        self.view_cart
+    end
+
+    def pizza
+        answer = prompt.select("What would you like to order?", [
+            "Cheese Pizza",
+            "Pepperoni Pizza",
+            "Hawaiian Pizza"
+        ])
+        @order = Order.create(order: answer, user_id: @user.id)
+        self.view_cart
+    end
+
+    def sandwich
+        answer = prompt.select("What would you like to order?", [
+            "Chicken Sandwich",
+            "BLT",
+            "Philly Cheese Steak"
+        ])
+        @order = Order.create(order: answer, user_id: @user.id)
+        self.view_cart
+    end
+
+    def salad
+        answer = prompt.select("What would you like to order?", [
+            "Ceasar Salad",
+            "Pasta Salad",
+            "Fruit Salad"
+        ])
+        @order = Order.create(order: answer, user_id: @user.id)
+        self.view_cart
+    end
+
+    def dessert
+        answer = prompt.select("What would you like to order?", [
+            "Apple Pie",
+            "Cheese Cake",
+            "Frozen Yogurt"
+        ])
+        @order = Order.create(order: answer, user_id: @user.id)
+        self.view_cart
+    end
+
+    # def delivery
+    #     puts "What would you like to order?:"
+    #     order = gets.chomp
+    #     @order = Order.create(order: order, user_id: @user.id)
+    #     binding.pry
+    #     self.view_cart
+    # end
     
     
     def view_cart
         puts "Would you like to edit or place your order?"
         user_input = gets.chomp
         if user_input == "edit"
-            self.delete
+            self.edit
         end
        
         if user_input == "order"
@@ -175,7 +268,8 @@ class Interface
     def edit
         puts "What would you like to edit?"
         user_input = gets.chomp
-        @order.order = user_input
+        @order.order = "#{@order.order}, #{user_input}"
+        binding.pry
         self.view_cart
     end
 
