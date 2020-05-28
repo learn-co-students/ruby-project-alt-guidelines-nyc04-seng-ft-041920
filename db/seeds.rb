@@ -2,13 +2,13 @@ User.destroy_all
 PlantList.destroy_all
 MyPlant.destroy_all
 
-User.create(username: Faker::Name.first_name)
-
-PlantList.create(
-    species: Faker::Food.vegetables, 
-    moisture_use: ["high", "medium", "low"].sample, 
-    watering_cycle: Faker::Number.within(range: 3..10) 
-    )
+5.times do 
+    User.create(username: Faker::Name.first_name.downcase)
+    PlantList.create(
+        species: Faker::Food.vegetables.downcase, 
+        moisture_use: ["high", "medium", "low"].sample, 
+        watering_cycle: Faker::Number.within(range: 3..10) 
+        )
 
     MyPlant.create(
     nickname: Faker::Artist.name.downcase,
@@ -18,3 +18,4 @@ PlantList.create(
     plant_list_id: PlantList.all.sample.id,
     water_cycle:Faker::Number.within(range: 3..10)
     )
+end

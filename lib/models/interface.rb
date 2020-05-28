@@ -26,17 +26,20 @@ class Interface
     end
     
     def greet
+        
         puts 'Welcome to Green Fairy 🧚'
         puts 'The best scheduler for watering your plants!'
         puts 'Let\'s get you started'
+        image
         puts 'Tell us your username 📛'
     end
 
     # Start the CLI APP
     def run
+        self.clear
         greet
         username_input = gets.chomp.downcase
-        self.loading(30, "~", 0.1)
+        # self.loading(30, "~", 0.1)
         user = User.find_create_user(username_input)
         main_menu(user)
     end
@@ -44,20 +47,22 @@ class Interface
     # Main Menu -> My Plants/ Add plant/ Delete Account/ Quit
     def main_menu(user)
         user = user
-        menu = ["My plants","ADD NEW PLANT","Delete My Account","Quit"]
+        self.clear
+        image
+        menu = ["See all my plants","Add new plant","Delete my account","Quit"]
         menu_selection = @prompt.select("What would you like to do?",menu)
             
             case menu_selection
-            when "My plants"
+            when "See all my plants"
                 my_plant(user)
-            when "ADD NEW PLANT"
+            when "Add new plant"
                 add_plant(user)
-            when "Delete My Account"
+            when "Delete my account"
                 answer = @prompt.yes?("Are you sure?")
                 self.goodbye
                 user.destroy
             when "Quit"
-                self.goodbye                
+                # self.goodbye                
             end
     end
 
@@ -67,50 +72,111 @@ class Interface
         show_my_plants_table(user)
 
         if user.all_plants.blank?
+            # puts "Looks like you don't have any plants"
+            # answer = @prompt.yes?("Do you want to add plants?")
+            # case answer
+            # when true
+            #     add_plant(user)
+            # when false
+            #     main_menu(user)
+            # end
+            menu = ["Add new plant","back"]
+            menu_selection = @prompt.select("Looks like you don't have any plants",menu)
             
-            puts "Looks like you don't have any plants"
-            answer = @prompt.yes?("Do you want to add plants?")
-            case answer
-            when true
+            case menu_selection
+            when "Add new plant"
                 add_plant(user)
-            when false
-                main_menu(user)
+            when "back"
+                main_menu(user)            
             end
         else
-            answer = @prompt.yes?("Have you watered any of your plants?")
-            # answer = @prompt.yes?("Do you want to add plants?")
-            case answer
-            when true
-                nicknames = user.my_plants.nicknames
+            # answer = @prompt.yes?("Have you watered any of your plants?")
+            # # answer = @prompt.yes?("Do you want to add plants?")
+            # case answer
+            # when true
+            #     nicknames = user.my_plants.nicknames
+            #     nickname = @prompt.select("Which plant did you water?", nicknames)
+            #     binding.pry
+            #     selected_plant = user.find_plant_nickname(nickname)
+            #     binding.pry
+            #     update_plant(selected_plant,user)
+            # when false
+            #     main_menu(user)
+            # end
+            menu = ["Water plant","Add new plant","Change nickname","back"]
+            menu_selection = @prompt.select("Select from below",menu)
+            nicknames = user.my_plants.nicknames
+            case menu_selection
+            when "Water plant"
+                
                 nickname = @prompt.select("Which plant did you water?", nicknames)
+                # binding.pry
                 selected_plant = user.find_plant_nickname(nickname)
+                # binding.pry
                 update_plant(selected_plant,user)
-            when false
-                main_menu(user)
+            when "Add new plant"
+                add_plant(user)
+            when "Change nickname"
+                nickname = @prompt.select("Which plant should we change?", nicknames)
+                nickname = nickname.downcase
+                selected_plant = user.find_plant_nickname(nickname)
+                new_name = @prompt.ask("Enter #{nickname}'s new name:")
+                # binding.pry
+                new_name = new_name.downcase
+                selected_plant.update_nickname(new_name) 
+                # self.clear
+                # show_my_plants_table(user)
+                self.my_plant(user)
+            when "back"
+                main_menu(user)            
             end
         end
     end
-
-    def update_plant(selected_plant, user)
+    #Sub-menu of My Plants: Updates watering status and cycle 
+    def update_plant(selected_plant, user, menu_sel=nil)   
         menu = ["update watering status","change watering cycle","back"]
         menu_selection = @prompt.select("options",menu)
         case menu_selection
         when "update watering status"
-            date =  @prompt.ask("when did you water #{selected_plant.nickname}? Today is #{Date.today}(in mm/dd)", convert: :date)
+            # binding.pry
+            date = get_date(selected_plant)
+            date=date.to_date
+            # binding.pry
             selected_plant.update_waterdate_status(date)
-           
-            main_menu(user)
+            my_plant(user)
         when "change watering cycle"
             days =  @prompt.ask("Change #{selected_plant.nickname}'s watering cycle to every 'x' days?", convert: :int)
             selected_plant.change_watercycle(days)
             
             #==============================>show table
-            main_menu(user)
+            my_plant(user)
         when "back"
             main_menu(user)
         end
+        
     end
-
+    def get_date(selected_plant)
+        date = @prompt.ask("when did you water #{selected_plant.nickname}? Today is #{Date.today}(in mm/dd)")
+        date = validate_past_date(date,selected_plant)
+        date.class == Date ? date : binding.pry
+        
+    end
+    def validate_past_date(date,selected_plant)
+        parseable =  Date.parse(date) rescue false
+        if parseable
+            date = Date.parse(date).to_date
+            if date < Date.today
+                return date
+            else
+                puts "Date must be today or past"
+                self.get_date(selected_plant)
+            end
+        else
+            puts "Invalid date format"
+            self.get_date(selected_plant)
+        end
+        
+    end
     def add_plant(user)
         user = user
         new_plant = @prompt.ask("Enter a plant species you want to add: (ex: Lily, Mint, Spider plant etc.)?")
@@ -118,7 +184,6 @@ class Interface
         # plant_name = gets.chomp.downcase
         new_plant = PlantList.check_plant(new_plant)
         nickname = @prompt.ask("Give a nickname to #{new_plant.species}:")
-        # binding.pry
         MyPlant.add_plant(nickname, user, new_plant)
         main_menu(user)
     end
@@ -126,7 +191,7 @@ class Interface
     
 
     def updated_my_plants_table(user)
-        rows = user.all_plants.map.with_index{|plant, index| my_plant_list(plant,index)}
+        rows = user.all_plants.map.with_index{|plant, index| my_plant_list(plant,index+1)}
         headings = default_table_headings
         table = create_display_table("My Plants", headings, rows)
         table.style = default_table_style
@@ -159,9 +224,12 @@ class Interface
 
     # Render Table
     def show_my_plants_table(user)
-        rows = user.all_plants.map.with_index{|plant, index| my_plant_list(plant,index)}
+        rows = user.all_plants.map.with_index{|plant, index| my_plant_list(plant,index+1)}
+        # binding.pry
+        rows = [["*","*","*","*","*"]] if rows.empty?
         headings = default_table_headings
-        table = create_display_table("My Plants", headings, rows)
+        # binding.pry
+        table = create_display_table("#{user.username.capitalize}'s Plants", headings, rows)
         table.style = default_table_style
         table.align_column(0, :left)
         puts table
@@ -178,7 +246,29 @@ class Interface
         puts ""
     end
 
+    def image
+                                                                                                                                                     
+    puts "
+   
+        ░██████╗░██████╗░███████╗███████╗███╗░░██╗  
+        ██╔════╝░██╔══██╗██╔════╝██╔════╝████╗░██║  
+        ██║░░██╗░██████╔╝█████╗░░█████╗░░██╔██╗██║  
+        ██║░░╚██╗██╔══██╗██╔══╝░░██╔══╝░░██║╚████║  
+        ╚██████╔╝██║░░██║███████╗███████╗██║░╚███║  
+        ░╚═════╝░╚═╝░░╚═╝╚══════╝╚══════╝╚═╝░░╚══╝  
+        
+                    ███████╗░█████╗░██╗██████╗░██╗░░░██╗
+         _ _  __    ██╔════╝██╔══██╗██║██╔══██╗╚██╗░██╔╝
+        ( | )/_/    ██╔════╝██╔══██╗██║██╔══██╗╚██╗░██╔╝
+     __( >O< )      █████╗░░███████║██║██████╔╝░╚████╔╝░
+     \\_\\(_|_)       ██╔══╝░░██╔══██║██║██╔══██╗░░╚██╔╝░░
+                    ██║░░░░░██║░░██║██║██║░░██║░░░██║░░░
+                    ╚═╝░░░░░╚═╝░░╚═╝╚═╝╚═╝░░╚═╝░░░╚═╝░░░ 
+    "
+    end
+
     def goodbye
+        self.clear
         length = 30
         sym = "*"
         timing =0.1
