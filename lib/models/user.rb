@@ -23,6 +23,17 @@ class User < ActiveRecord::Base
         nickname = nickname.downcase
         return MyPlant.find_by(nickname: nickname)
     end
+
+    def find_plant_nicknames(nicknames)
+        index = 0
+        found_plants = []
+        nicknames.count.times do
+            nickname = nicknames[index].downcase
+            found_plants << MyPlant.find_by(nickname: nickname)
+            index += 1
+        end
+        return found_plants
+    end
     
     def num_of_plants
         self.all_plants.length

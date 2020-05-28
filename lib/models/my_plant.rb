@@ -71,16 +71,23 @@ class MyPlant < ActiveRecord::Base
     def show_each_plant_spec(index)   
         ###Check if watering status and return message
         water_msg = check_water_status
-        future_date =calculate_future_date(self.watering_date,self.water_cycle)
+        future_msg =calculate_future_date(self.watering_date,self.water_cycle).last
 
-        [index, self.nickname.capitalize, self.plant_list.species.capitalize, water_msg, future_date]
+        [index, self.nickname.capitalize, self.plant_list.species.capitalize, water_msg, future_msg]
+    end
+
+    def self.delete_plants(plants)
+        ids = plants.map do |plant|
+            plant.id
+        end
+        MyPlant.delete(ids)
     end
     
     def check_water_status
         today = Date.today
         self.watered ? status = "Yes": status = "No"
         last_watered_date = self.watering_date.to_date if self.watering_date != nil
-        future_date = calculate_future_date(self.watering_date,self.water_cycle)
+        future_date = calculate_future_date(self.watering_date,self.water_cycle).first
 
 
         #Not watered and just created
@@ -94,29 +101,31 @@ class MyPlant < ActiveRecord::Base
         #Passed Due date
         elsif self.watering_date != nil && self.watered==false && (today > future_date)
             #binding.pry
-            return "#{status}, passed #{(today - future_date).to_i} days"
+            return "#{status}, #{(today - future_date).to_i} days overdue!"
         #Passed Due date - by changing date too far
         elsif self.watering_date != nil && self.watered==true && (today > future_date)
             #binding.pry
-            return "#{status}, passed #{(today - future_date).to_i} days"
+            self.update(watered: false)
+            status = "No"
+            return "!!#{status}, passed #{(today - future_date).to_i} days"
         #Have watered and still not due date
         elsif self.watering_date != nil && self.watered==true && (today < future_date)
             #binding.pry
             return "#{status}, watered #{(today - last_watered_date).to_i} days ago"
         #Due tomorrow
-        elsif self.watering_date != nil && self.watered==true && (today == future_date)
+        elsif self.watering_date != nil && self.watered==true && (today == future_date-1)
             #binding.pry
-            return "#{status}, water #{(today - last_watered_date).to_i} days ago"
-            self.watered = false
+            return "#{status}, should water tomorrow!"#water #{(today - last_watered_date).to_i} days ago
+            self.update(watered: false)
         #Due water today
         elsif self.watering_date != nil && self.watered==false && (today == future_date)
             #binding.pry
             return "Due today"
         #Just water today
-        elsif self.watering_date != nil && self.watered==true && (today == future_date)
+        elsif self.watering_date != nil && self.watered==true && (today == self.created_at)
             #binding.pry
             return "Just watered today"
-            self.watered = false
+            # self.update(watered: false)
         #To catch bug 
         else
             binding.pry
@@ -126,13 +135,18 @@ class MyPlant < ActiveRecord::Base
     end
 
     def calculate_future_date(date, cycle)
-
+        future_date = []
         if self.watering_date == nil
-            return "*"
+            future_date << "*"
+            # return "*"
+            return future_date
         else
             date = date.to_date
             cycle = cycle.day
             update = (date+cycle)
+            future_date << update
+            future_date << "I'd say now" if update < Date.today
+            return future_date
         end
     end
 end

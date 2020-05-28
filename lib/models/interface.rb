@@ -1,5 +1,5 @@
 ###########################
-# Screem clearing module  #
+# Screen clearing module  #
 ###########################
 
 module Screen
@@ -59,8 +59,9 @@ class Interface
                 add_plant(user)
             when "Delete my account"
                 answer = @prompt.yes?("Are you sure?")
-                self.goodbye
-                user.destroy
+                answer == true ? user.destroy : self.main_menu(user)
+                # self.goodbye
+                # user.destroy
             when "Quit"
                 # self.goodbye                
             end
@@ -103,7 +104,7 @@ class Interface
             # when false
             #     main_menu(user)
             # end
-            menu = ["Water plant","Add new plant","Change nickname","back"]
+            menu = ["Water plant","Add new plant","Change nickname","Delete plants","back"]
             menu_selection = @prompt.select("Select from below",menu)
             nicknames = user.my_plants.nicknames
             case menu_selection
@@ -120,18 +121,26 @@ class Interface
                 nickname = @prompt.select("Which plant should we change?", nicknames)
                 nickname = nickname.downcase
                 selected_plant = user.find_plant_nickname(nickname)
-                new_name = @prompt.ask("Enter #{nickname}'s new name:")
+                new_name = @prompt.ask("Enter #{nickname}'s new name:") do |q|
+                            q.modify :strip, :down
+                            end
                 # binding.pry
-                new_name = new_name.downcase
+                # new_name = new_name.downcase
                 selected_plant.update_nickname(new_name) 
                 # self.clear
                 # show_my_plants_table(user)
+                self.my_plant(user)
+            when "Delete plants"
+                nicknames = @prompt.multi_select("Which plant should we remove?", nicknames)
+                plants = user.find_plant_nicknames(nicknames)
+                MyPlant.delete_plants(plants)
                 self.my_plant(user)
             when "back"
                 main_menu(user)            
             end
         end
     end
+
     #Sub-menu of My Plants: Updates watering status and cycle 
     def update_plant(selected_plant, user, menu_sel=nil)   
         menu = ["update watering status","change watering cycle","back"]
@@ -140,7 +149,7 @@ class Interface
         when "update watering status"
             # binding.pry
             date = get_date(selected_plant)
-            date=date.to_date
+            date = date.to_date
             # binding.pry
             selected_plant.update_waterdate_status(date)
             my_plant(user)
@@ -156,8 +165,10 @@ class Interface
         
     end
     def get_date(selected_plant)
-        date = @prompt.ask("when did you water #{selected_plant.nickname}? Today is #{Date.today}(in mm/dd)")
+        date = @prompt.ask("When did you water #{selected_plant.nickname}?",help:"today: #{Date.today.strftime("%m/%d")}(in mm/dd)")
         date = validate_past_date(date,selected_plant)
+        
+        # 10.times {|p| print "\rupdating %#{p+1}..."; sleep 1} if date.class == Date 
         date.class == Date ? date : binding.pry
         
     end
@@ -165,27 +176,31 @@ class Interface
         parseable =  Date.parse(date) rescue false
         if parseable
             date = Date.parse(date).to_date
-            if date < Date.today
+            if date <= Date.today
                 return date
             else
-                puts "Date must be today or past"
+                print "\rDate must be today or past \r"
+                sleep 1
                 self.get_date(selected_plant)
             end
         else
-            puts "Invalid date format"
+            print "\rInvalid date format \r"
+            sleep 1
             self.get_date(selected_plant)
         end
         
     end
     def add_plant(user)
         user = user
-        new_plant = @prompt.ask("Enter a plant species you want to add: (ex: Lily, Mint, Spider plant etc.)?")
+        new_plant = @prompt.ask("Enter a plant species you want to add:", help:"ex. Lily, Mint, Spider plant etc.")
         # puts "Enter a plant species you want to add: (ex: Lily, Mint, Spider plant etc.)"
         # plant_name = gets.chomp.downcase
         new_plant = PlantList.check_plant(new_plant)
-        nickname = @prompt.ask("Give a nickname to #{new_plant.species}:")
+        nickname = @prompt.ask("Give a nickname to #{new_plant.species}:") do |q|
+                            q.modify :strip, :down
+                    end
         MyPlant.add_plant(nickname, user, new_plant)
-        main_menu(user)
+        my_plant(user)
     end
     
     

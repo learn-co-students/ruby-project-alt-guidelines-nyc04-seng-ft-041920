@@ -9,15 +9,17 @@ class PlantList < ActiveRecord::Base
     def self.check_plant(plant_name)
         if find_plant(plant_name)
              found_plant = find_plant(plant_name) 
-            puts "yup we have that"
+            puts "\ryup we have that\r"
+            sleep 1
             return found_plant
         else
-            puts "nope we don't have that. let's create one"
-            puts "do you know how in many days #{plant_name} needs to be watered?"
-            puts "please enter in numbers"
+            puts "\rnope we don't have that. \n\rlet's create one\r"
+            puts "In how many days #{plant_name} needs to be watered? (ex. 5)"
+            puts "\rplease enter in numbers\r"
             watering_cycle = gets.chomp.downcase
             new_plant=create_plant(plant_name ,watering_cycle)
-            puts "thank you!"
+            puts "\rthank you!\r"
+            sleep 1
             return new_plant
         end   
     end
