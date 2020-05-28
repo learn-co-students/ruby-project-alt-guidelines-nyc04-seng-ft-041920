@@ -22,8 +22,12 @@ class PlantList < ActiveRecord::Base
         end   
     end
 
-    def self.create_plant(species,moisture_use= 'medium',watering_cycle=7)
-        PlantList.create(species: species,moisture_use: moisture_use, watering_cycle: watering_cycle)
+    def self.create_plant(species,watering_cycle=7,moisture_use= 'medium')
+        PlantList.create(
+            species: species,
+            moisture_use: moisture_use, 
+            watering_cycle: watering_cycle
+            )
     end
 
 end
