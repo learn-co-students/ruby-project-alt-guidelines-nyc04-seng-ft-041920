@@ -8,15 +8,41 @@ class Interface
         @order = nil
     end
 
-    def run
-        greet
-        login_prompt
-    end
 
-    def greet
-        puts "Welcome to Munchy!"
+    def welcome
+        puts "Welcome to Muncheez!"
         sleep 1
     end
+    
+    #ex.
+    # def login_or_register
+    #     answer = prompt.select("Are you logging in or registering?", [
+    #         "Logging in",
+    #         "Registering"
+    #     ])
+    #     if answer == "Logging in"
+    #         User.logging_someone_in
+    #     elsif answer == "Registering"
+    #         User.create_a_new_user
+    #     end
+    # end
+
+    # def main_menu
+    #     puts "Hello, welcome to the app #{user.username}"
+    # end
+
+
+    def login_prompt?
+        answer = prompt.select("Are you loggin in or creating an account?",[
+            "Login",
+            "Create an account"
+        ])
+        if answer == "Login"
+            login
+        elsif answer == "Create an account"
+            create_account
+    end
+
 
     def login_prompt
         puts "Already have an account? (yes or no)"
