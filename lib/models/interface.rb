@@ -62,36 +62,56 @@ class Interface
     #         login_prompt
     #     end
     # end
-
+    
     def create_account
-        puts "Create an account!"
+        email = prompt.ask("What do you want your email to be?")
+            while User.find_by(emailaddress: email) do
+                puts "Sorry, that email has already been taken"
+                self.create_account
+            end
+        password = prompt.ask("Create a password")
         sleep 1
-        puts "What is your name?"
-        user_name = gets.chomp
+        username = prompt.ask('What is your name?')
         sleep 1
-        puts "Email Address"
-        email_address = gets.chomp
+        phone_number = prompt.ask('What is your phone number?')
         sleep 1
-        puts "Phone Number"
-        phone_number = gets.chomp
-        sleep 1
-        puts "Home Address"
-        address = gets.chomp
-        sleep 1
-        #Fix password so that it must be 8 characters long
-        puts "Create Password."
-        password = gets.chomp
-        @user = User.create(name: user_name, emailaddress: email_address, phonenumber: phone_number, address: address, password: password)
+        address = prompt.ask('What is your home address?')   
+        
+        @user = User.create(name: username, emailaddress: email, phonenumber: phone_number, address: address, password: password)
         self.delivery
     end
-   
+
+
+
+
+
+    # def create_account
+    #     puts "Create an account!"
+    #     sleep 1
+    #     puts "What is your name?"
+    #     user_name = gets.chomp
+    #     sleep 1
+    #     puts "Email Address"
+    #     email = gets.chomp
+    #     sleep 1
+    #     puts "Phone Number"
+    #     phone_number = gets.chomp
+    #     sleep 1
+    #     puts "Home Address"
+    #     address = gets.chomp
+    #     sleep 1
+    #     #Fix password so that it must be 8 characters long
+    #     puts "Create Password."
+    #     password = gets.chomp
+    #     @user = User.create(name: user_name, emailaddress: email, phonenumber: phone_number, address: address, password: password)
+    #     self.delivery
+    # end
+     
     def login
-        puts "Email Address"
-        email_address = gets.chomp
-        match = User.find_email_address(email_address)
+        email = prompt.ask("Please provide your email address?")
+        match = User.find_by(emailaddress: email)
         if match
-            puts "Password"
-            password = gets.chomp
+            password = prompt.ask("What is your password?")
             @user = match
              match.password == password ? self.delivery : self.login_failed
         else
@@ -99,11 +119,37 @@ class Interface
         end
     end
 
-    def login_failed 
-        puts "Sorry! Your account does not exist. Would you like to create an account? (yes or no)"
-        user_input = gets.chomp
-        user_input == "yes" ? self.create_account : self.login
+
+    # def login
+    #     puts "Email Address"
+    #     email = gets.chomp
+    #     match = User.find_by(emailaddress: email)
+    #     if match
+    #         puts "Password"
+    #         password = gets.chomp
+    #         @user = match
+    #          match.password == password ? self.delivery : self.login_failed
+    #     else
+    #         self.login_failed
+    #     end
+    # end
+
+
+
+    def login_failed
+        answer = prompt.select("Email does not exist. Would you like to create a new one?", [
+            "Yes",
+            "No"
+        ])
+        answer == "Yes" ? self.create_account : self.login
     end
+
+
+    # def login_failed 
+    #     puts "Sorry! Your account does not exist. Would you like to create an account? (yes or no)"
+    #     user_input = gets.chomp
+    #     user_input == "yes" ? self.create_account : self.login
+    # end
 
     def delivery
         puts "What would you like to order?:"
@@ -118,7 +164,7 @@ class Interface
         puts "Would you like to edit or place your order?"
         user_input = gets.chomp
         if user_input == "edit"
-            self.edit
+            self.delete
         end
        
         if user_input == "order"
@@ -131,6 +177,12 @@ class Interface
         user_input = gets.chomp
         @order.order = user_input
         self.view_cart
+    end
+
+    def delete
+        @order.destroy
+        binding.pry
+        self.place_order
     end
 
 
