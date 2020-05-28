@@ -32,7 +32,7 @@ class Interface
     # end
 
 
-    def login_prompt?
+    def login_prompt
         answer = prompt.select("Are you loggin in or creating an account?",[
             "Login",
             "Create an account"
@@ -41,26 +41,27 @@ class Interface
             login
         elsif answer == "Create an account"
             create_account
-    end
-
-
-    def login_prompt
-        puts "Already have an account? (yes or no)"
-        user_input = gets.chomp
-        user_has_account?(user_input)
-    end
-
-    def user_has_account?(user_input)
-        if user_input == "yes"
-            login
-        elsif user_input == "no"
-            create_account
-        # does not execute else    
-        else
-            "Please provide one of the following options."
-            login_prompt
         end
     end
+
+
+    # def login_prompt
+    #     puts "Already have an account? (yes or no)"
+    #     user_input = gets.chomp
+    #     user_has_account?(user_input)
+    # end
+
+    # def user_has_account?(user_input)
+    #     if user_input == "yes"
+    #         login
+    #     elsif user_input == "no"
+    #         create_account
+    #     # does not execute else    
+    #     else
+    #         "Please provide one of the following options."
+    #         login_prompt
+    #     end
+    # end
 
     def create_account
         puts "Create an account!"
