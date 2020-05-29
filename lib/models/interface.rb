@@ -184,6 +184,25 @@ class Interface
 
     end
 
+    def decision
+        answer = prompt.select("Yum! Would you like to view your cart, edit, delete or place your order?", [
+            "View Cart",
+            "Edit",
+            "Delete",
+            "Place Order"
+        ])
+        case answer 
+        when "View Cart"
+            view_cart
+        when "Edit"
+            edit
+        when "Delete"
+            delete
+        when "Place Order"
+            place_order
+        end
+    end
+
     def breakfast
         answer = prompt.select("What would you like to order?", [
             "Pancakes",
@@ -191,8 +210,9 @@ class Interface
             "Omelette"
         ])
         @order = Order.create(order: answer, user_id: @user.id)
-        self.view_cart
+        decision
     end
+        
 
     def burger
         answer = prompt.select("What would you like to order?", [
@@ -201,7 +221,7 @@ class Interface
             "Bacon Cheese Burger"
         ])
         @order = Order.create(order: answer, user_id: @user.id)
-        self.view_cart
+        decision
     end
 
     def pizza
@@ -211,7 +231,7 @@ class Interface
             "Hawaiian Pizza"
         ])
         @order = Order.create(order: answer, user_id: @user.id)
-        self.view_cart
+        decision
     end
 
     def sandwich
@@ -221,7 +241,7 @@ class Interface
             "Philly Cheese Steak"
         ])
         @order = Order.create(order: answer, user_id: @user.id)
-        self.view_cart
+        decision
     end
 
     def salad
@@ -231,7 +251,7 @@ class Interface
             "Fruit Salad"
         ])
         @order = Order.create(order: answer, user_id: @user.id)
-        self.view_cart
+        decision
     end
 
     def dessert
@@ -241,9 +261,10 @@ class Interface
             "Frozen Yogurt"
         ])
         @order = Order.create(order: answer, user_id: @user.id)
-        
-        self.view_cart
+        decision
     end
+        
+        
 
     # def delivery
     #     puts "What would you like to order?:"
@@ -260,7 +281,7 @@ class Interface
         cents1 = rand(99)
         cents2 = rand(99)
         cents3 = rand(99)
-        puts "Would you like to edit or place your order? \n \n"
+        puts "Would you like to edit, delete or place your order? \n \n"
         puts "Total:"
         puts "#{@order.order} - $#{food}.#{cents1}"
         puts "Tax - $#{tax}.#{cents2}"
@@ -304,18 +325,45 @@ class Interface
     # end
 
     def edit
-        puts "What would you like to edit?"
-        user_input = gets.chomp
-        @order.order = "#{@order.order}, #{user_input}"
-        binding.pry
-        self.view_cart
+        answer = prompt.ask("What would you like to edit?")
+        @order.order = "#{@order.order}, #{answer}"
+        answer = prompt.select("Would you like to view your cart, delete or place your order? ", [
+            "View Cart",
+            "Delete",
+            "Place Order"
+        ])
+        case answer
+        when "View Cart"
+            view_cart
+        when "Delete"
+            delete
+        when "Place Order"
+            place_order
+        end
     end
+
+    # def edit?
+    #     puts "What would you like to edit?"
+    #     user_input = gets.chomp
+    #     @order.order = "#{@order.order}, #{user_input}"
+    #     binding.pry
+    #     self.view_cart
+    # end
 
     def delete
         @order.destroy
-        binding.pry
-        self.place_order
+        answer = prompt.select("Would you like to make a different order?", [
+            "Yes",
+            "No"
+        ])
+        if answer == "Yes"
+            delivery
+        else
+            system exit
+        end
     end
+        
+        
 
 
     def place_order
@@ -325,8 +373,8 @@ class Interface
         eta = rand(35)
 
         puts "Your order is on the way!"
-        puts "#{@order.order} mmmmmmm delicous!"
-        puts "Courier: #{@order.courier.name} ETA: #{eta} min."
+        puts "Muncheez: #{@order.order}"
+        puts "Courier: #{@order.courier.name} \nETA: #{eta} min"
         
   
     end
