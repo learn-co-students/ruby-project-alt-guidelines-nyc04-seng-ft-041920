@@ -5,7 +5,7 @@ Green Fairy is a CLI app that helps you to schedule and manage watering your pla
 Built using Ruby and Active Record.
 
 ---
-![GreenFairy](https://ibb.co/MPXZDLX)
+![GreenFairy] (https://ibb.co/MPXZDLX)
 
 ## Getting Started
 
@@ -36,11 +36,11 @@ Built using Ruby and Active Record.
 
 Below are some Gems and links that I used:
 
-* [Faker](https://github.com/faker-ruby/faker): fake data generator
-* [TTY::Prompt](https://github.com/piotrmurach/tty-prompt): interactive command line prompt
-* [Paint](https://github.com/fazibear/colorize): simple and powerful way to add colors to text
-* [Terminal-table](https://github.com/ruby/date): simple way to make table
-* [Text to ASCII Art Generator](https://fsymbols.com/generators/carty/): generates ASCII fonts
-* [ASCII Art Collection](https://asciiart.website/): Christopher Johnson's ASCII Art Collection
-* [ASCII Art Archive](https://www.asciiart.eu/): collection of ASCII art
+* [Faker] (https://github.com/faker-ruby/faker): fake data generator
+* [TTY::Prompt] (https://github.com/piotrmurach/tty-prompt): interactive command line prompt
+* [Paint] (https://github.com/janlelis/paint/): simple, fast and powerful way to add colors to text
+* [Terminal-table] (https://github.com/tj/terminal-table): ASCII Table Generator, simple and feature rich
+* [Text to ASCII Art Generator] (https://fsymbols.com/generators/carty/): generates ASCII fonts
+* [ASCII Art Collection] (https://asciiart.website/): Christopher Johnson's ASCII Art Collection
+* [ASCII Art Archive] (https://www.asciiart.eu/): collection of ASCII art
 
