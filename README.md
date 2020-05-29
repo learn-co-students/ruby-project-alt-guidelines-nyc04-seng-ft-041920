@@ -5,7 +5,7 @@ Green Fairy is a CLI app that helps you to schedule and manage watering your pla
 Built using Ruby and Active Record.
 
 ---
-![GreenFairy] (https://ibb.co/MPXZDLX)
+![GreenFairy] (https://imgur.com/8CqIgVD)
 
 ## Getting Started
 
@@ -15,12 +15,10 @@ Built using Ruby and Active Record.
 4. Run `rake db:seed` to seed the database with some auto-generated data.
 5. Once you've installed everything smoothly, run `ruby bin/run.rb` to start the app!
 
-## User Flow
+## Main Menu
 * create an username
-         |
-         v
 * See all my plants
-* Add new lant
+* Add new plant
 * Delete my account
 * Quit
 
