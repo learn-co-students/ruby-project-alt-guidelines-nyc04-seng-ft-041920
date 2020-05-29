@@ -8,18 +8,16 @@ class PlantList < ActiveRecord::Base
 
     def self.check_plant(plant_name)
         if find_plant(plant_name)
-             found_plant = find_plant(plant_name) 
-            puts "\ryup we have that\r"
+            found_plant = find_plant(plant_name) 
+            puts Paint["\ryup we have that\r",'#3CB371']
             sleep 1
             return found_plant
         else
-            puts "\rnope we don't have that. \n\rlet's create one\r"
-            puts "In how many days #{plant_name} needs to be watered? (ex. 5)"
-            puts "\rplease enter in numbers\r"
-            watering_cycle = gets.chomp.downcase
+            watering_cycle = Interface.ask_water_cycle(plant_name)
+            # puts Paint["\rnope we don't have that. let's create one\r",'#3CB371']
+            # puts "In how many days #{plant_name} needs to be watered? (enter in numbers ex. 5)"
+            # watering_cycle = gets.chomp.downcase
             new_plant=create_plant(plant_name ,watering_cycle)
-            puts "\rthank you!\r"
-            sleep 1
             return new_plant
         end   
     end

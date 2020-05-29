@@ -6,10 +6,12 @@ class User < ActiveRecord::Base
                 
         user = User.find_by(username: username_input)
         if user
-           puts "Welcome back #{user.username.capitalize}! "
+           puts Paint["welcome back #{user.username.capitalize}!", '#3CB371']
+           sleep 1
         else
           user = User.create(username: username_input)
-          puts "Nice to meet you #{user.username.capitalize}!"        
+          puts Paint["happy to meet you #{user.username.capitalize}!", '#3CB371']  
+          sleep 1      
         end
         return user
     end 
