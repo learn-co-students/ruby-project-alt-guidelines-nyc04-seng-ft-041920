@@ -1,4 +1,4 @@
-Green Fairy
+Green Fairy 🌿
 ========================
 
 Green Fairy is a CLI app that helps you to schedule and manage watering your plants.
@@ -30,7 +30,7 @@ Built using Ruby and Active Record.
 
 ---
 
-## Built With
+## 🧚 Built With
 
 Below are some Gems and links that I used:
 
