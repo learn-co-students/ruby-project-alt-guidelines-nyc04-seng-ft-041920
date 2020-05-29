@@ -4,9 +4,9 @@ require_relative '../config/environment'
 cli = Interface.new
 
 # cli.greet
-# cli.run
+cli.run
 
 
 
- binding.pry
+# binding.pry
 # puts "hello world"

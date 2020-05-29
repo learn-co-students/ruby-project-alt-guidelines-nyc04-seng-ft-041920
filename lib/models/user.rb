@@ -6,10 +6,12 @@ class User < ActiveRecord::Base
                 
         user = User.find_by(username: username_input)
         if user
-           puts "Welcome back #{user.username.capitalize}! "
+           puts Paint["welcome back #{user.username.capitalize}!", '#3CB371']
+           sleep 1
         else
           user = User.create(username: username_input)
-          puts "Nice to meet you #{user.username.capitalize}!"        
+          puts Paint["happy to meet you #{user.username.capitalize}!", '#3CB371']  
+          sleep 1      
         end
         return user
     end 
@@ -22,6 +24,17 @@ class User < ActiveRecord::Base
     def find_plant_nickname(nickname)
         nickname = nickname.downcase
         return MyPlant.find_by(nickname: nickname)
+    end
+
+    def find_plant_nicknames(nicknames)
+        index = 0
+        found_plants = []
+        nicknames.count.times do
+            nickname = nicknames[index].downcase
+            found_plants << MyPlant.find_by(nickname: nickname)
+            index += 1
+        end
+        return found_plants
     end
     
     def num_of_plants

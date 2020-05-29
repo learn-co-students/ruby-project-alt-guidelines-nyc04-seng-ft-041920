@@ -10,4 +10,5 @@ gem "faker"
 
 gem 'tty-prompt'
 gem 'terminal-table'
-gem 'time_difference'
+gem 'paint'
+gem 'json'
