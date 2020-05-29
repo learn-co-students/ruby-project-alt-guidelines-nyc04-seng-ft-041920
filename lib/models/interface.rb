@@ -241,6 +241,7 @@ class Interface
             "Frozen Yogurt"
         ])
         @order = Order.create(order: answer, user_id: @user.id)
+        
         self.view_cart
     end
 
@@ -251,19 +252,56 @@ class Interface
     #     binding.pry
     #     self.view_cart
     # end
-    
-    
+
     def view_cart
-        puts "Would you like to edit or place your order?"
-        user_input = gets.chomp
-        if user_input == "edit"
-            self.edit
-        end
-       
-        if user_input == "order"
-            self.place_order
+        food = rand(20)
+        tax = rand(5)
+        delivery = rand(3)
+        cents1 = rand(99)
+        cents2 = rand(99)
+        cents3 = rand(99)
+        puts "Would you like to edit or place your order? \n \n"
+        puts "Total:"
+        puts "#{@order.order} - $#{food}.#{cents1}"
+        puts "Tax - $#{tax}.#{cents2}"
+        puts "Delivery Fee - $#{delivery}.#{cents3}"
+        answer = prompt.select("", [
+            "Edit",
+            "Delete",
+            "Place Order"
+        ])
+        case answer
+        when "Edit"
+            edit
+        when "Delete"
+            delete
+        when "Place Order"
+            place_order
         end
     end
+    
+    
+    # def view_cart?
+    #     food = rand(20)
+    #     tax = rand(5)
+    #     delivery = rand(3)
+    #     cents1 = rand(99)
+    #     cents2 = rand(99)
+    #     cents3 = rand(99)
+    #     puts "Would you like to edit or place your order? \n \n"
+    #     puts "Total:"
+    #     puts "#{@order.order} - $#{food}.#{cents1}"
+    #     puts "Tax - $#{tax}.#{cents2}"
+    #     puts "Delivery Fee - $#{delivery}.#{cents3}"
+    #     user_input = gets.chomp
+    #     if user_input == "edit"
+    #         self.edit
+    #     end
+       
+    #     if user_input == "order"
+    #         self.place_order
+    #     end
+    # end
 
     def edit
         puts "What would you like to edit?"
