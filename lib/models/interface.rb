@@ -251,30 +251,5 @@ class Interface
         table.align_column(0, :left)
         puts table
     end
-
-    ##################################
-    ##loading and good bye function ##
-    ##################################
-    def loading(length, sym, timing)
-        length.times do |a|
-          print sym
-          sleep(timing)
-        end
-        puts ""
-    end
-
-    def goodbye
-        self.clear
-        length = 30
-        sym = "*"
-        timing =0.1
-
-        length.times do |a|
-          print sym
-          sleep(timing)
-        end
-        puts "bye bye"
-    end
-    
     
 end
