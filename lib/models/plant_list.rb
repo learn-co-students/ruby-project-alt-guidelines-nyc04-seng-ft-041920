@@ -9,7 +9,7 @@ class PlantList < ActiveRecord::Base
     def self.check_plant(plant_name)
         if find_plant(plant_name)
             found_plant = find_plant(plant_name) 
-            puts Paint["\ryup we have that\r",'#3CB371']
+            print Paint["\ryup we have that\r",'#3CB371']
             sleep 1
             return found_plant
         else

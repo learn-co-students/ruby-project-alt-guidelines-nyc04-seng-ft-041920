@@ -103,9 +103,7 @@ class Interface
             when "Water plant"
                 
                 nickname = @@prompt.select("Which plant did you water?", nicknames)
-                # binding.pry
                 selected_plant = user.find_plant_nickname(nickname)
-                # binding.pry
                 update_plant(selected_plant,user)
             when "Add new plant"
                 add_plant(user)
@@ -198,8 +196,10 @@ class Interface
         new_plant = @@prompt.ask("Enter a plant species you want to add:", help: "(ex. Lily, Mint, Spider plant etc.)", required: true)
         new_plant = PlantList.check_plant(new_plant)
         nickname = @@prompt.ask("Give a nickname to #{new_plant.species.capitalize}:") do |q|
+                            q.required true
                             q.modify :strip, :down
                     end
+        nickname =nickname.downcase
         MyPlant.add_plant(nickname, user, new_plant)
         # binding.pry
         my_plant(user)

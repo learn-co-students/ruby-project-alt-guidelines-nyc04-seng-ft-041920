@@ -119,6 +119,9 @@ class MyPlant < ActiveRecord::Base
         elsif self.watering_date != nil && self.watered==false && (today == future_date)
             #binding.pry
             return "Due today"
+        #Due water today
+        elsif self.watering_date != nil && (today == future_date)
+            return "Due today"
         #To catch bug 
         else
             binding.pry
