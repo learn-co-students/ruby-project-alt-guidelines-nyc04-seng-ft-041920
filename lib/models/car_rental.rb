@@ -18,7 +18,7 @@ class CarRental < ActiveRecord::Base
             car.choice 'Yellow 2020 Lamborghini Aventador SVJ', CarRental.find_by(model: "Aventador SVJ")
             car.choice 'Orange 2018 Mclaren 720S', CarRental.find_by(model: "720S")
             car.choice 'Purple 2019 Porsche GT3', CarRental.find_by(model: "GT3")
-            car.choice 'Red 2015 Ferrari Laferrari', CarRental.find_by(model: "Laferrari")
+            car.choice 'Red 2015 Ferrari Laferrari', CarRental.find_by(model: "LaFerrari")
             car.choice 'Blue 2020 Bugatti Chiron', CarRental.find_by(model: "Chiron")
             car.choice 'Green 2017 Mercedes AMG GT', CarRental.find_by(model: "AMG GT")
             car.choice 'Grey 2018 Ferrari 812 Superfast', CarRental.find_by(model: "812 Superfast")
