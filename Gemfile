@@ -11,4 +11,3 @@ gem "faker"
 gem 'tty-prompt'
 gem 'terminal-table'
 gem 'paint'
-gem 'json'
