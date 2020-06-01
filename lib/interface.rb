@@ -17,3 +17,13 @@ class Interface
       "Buick" ])    
   end
 end
+
+
+Ian = User.new  class 
+Ian.name = "Ian"
+Ian.age = 25
+Bashir = User
+an Instance is a component of a class
+Ian.license = "ML87234565432q457y"
+
+Ian.license #  +>  "ML87234565432q457y"

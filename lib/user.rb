@@ -14,7 +14,15 @@ class User < ActiveRecord::Base
       found_user = User.find_by(username: username)
     end
 
-    def specific_car # takes in a model (string) as an argument. It should return the first instance of a car with that model. Example would be
-    end 
+    # def specific_car # takes in a model (string) as an argument. It should return the first instance of a car with that model. 
+      
+    # end
+    def self.change_age(user, new_age)# a method that is used on a user instance that takes in a new age (integer) as an argument. 
+      # It should return that user instance with the updated age. 
+      # This should save to the database.
+      user.age = new_age     
+      user.save
+      end
+    end
 
 end
