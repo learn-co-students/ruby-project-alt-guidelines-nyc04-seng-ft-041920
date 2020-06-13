@@ -50,6 +50,7 @@ sleep 1
                 self.create_account
             end
         password = prompt.ask("Password: ")
+        binding.pry
         sleep 1
         username = prompt.ask('Name: ')
         sleep 1
@@ -58,6 +59,7 @@ sleep 1
         address = prompt.ask('Current Location: ')   
         
         @user = User.create(name: username, emailaddress: email, phonenumber: phone_number, address: address, password: password)
+        binding.pry
         self.delivery
     end
 
